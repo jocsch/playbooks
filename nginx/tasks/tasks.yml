@@ -1,0 +1,27 @@
+- name: install nginx 
+  apt: name=nginx state=installed update_cache=yes
+
+- name:  copy fixed init for nginx
+  copy: src=playbooks/nginx/files/nginx.init dest=/etc/init.d/nginx mode=0755
+
+#- name: write nginx.conf
+#  template: src=playbooks/nginx/templates/nginx.conf.j2 dest=/etc/nginx/nginx.conf
+#  notify:
+#  - restart nginx
+
+- name: unlink default
+  file: path=/etc/nginx/sites-enabled/default state=absent
+
+- name: write simple site info
+  template: src=playbooks/nginx/templates/nginx.simple.conf.j2 dest=/etc/nginx/sites-available/simple
+
+- name: link simple site
+  file: src=/etc/nginx/sites-available/simple dest=/etc/nginx/sites-enabled/simple state=link
+  notify:
+  - restart nginx
+
+- name: write nginx.conf.
+  template: src=playbooks/nginx/templates/nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  notify:
+  - restart nginx
+
