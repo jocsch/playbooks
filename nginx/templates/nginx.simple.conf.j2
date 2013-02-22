@@ -3,4 +3,8 @@ server {
 	server_name localhost;
 	root /vagrant;
 	index index.html;
+	charset UTF-8;
+	sendfile off;
+	if_modified_since off;
+	add_header Last-Modified "";
 }
